@@ -27,6 +27,8 @@ pub enum PlayerStatus {
     Paused,
     /// Media is currently stopped.
     Stopped,
+
+    NoPlayer,
 }
 
 impl FromStr for PlayerStatus {
@@ -164,10 +166,15 @@ impl PlayerCtl {
     /// Will panic if playerctl returns an invalid status.
     #[must_use]
     pub fn status() -> PlayerStatus {
-        command("playerctl status")
-            .trim()
-            .parse()
-            .expect("Failed to parse player status")
+        let status_str = &command("playerctl status").trim().to_owned()[..];
+
+        match status_str {
+            "Playing" | "Paused" | "Stopped" => {
+                status_str.parse().unwrap_or(PlayerStatus::NoPlayer)
+            }
+            "No players found" => PlayerStatus::NoPlayer,
+            _ => PlayerStatus::NoPlayer, // Handle any other unexpected cases
+        }
     }
 
     /// Get the metadata of the currently playing track.
