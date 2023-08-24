@@ -14,7 +14,7 @@ you need to have `playerctl` installed
 sudo pacman -S playerctl
 ```
   
-#### manual build
+### manual build
 
 ```
 git clone https://github.com/cybergaz/waybar_player_rust
@@ -24,7 +24,7 @@ cargo build
 
 <br>
 
-#### integration with waybar 
+### integration with waybar 
 just update the waybar config by adding new module , for example :
 ```
   "custom/player": {
