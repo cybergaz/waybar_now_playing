@@ -1,27 +1,5 @@
 //! # Playerctl
-//!
-//! A simple Rust wrapper for the playerctl.
-//!
-//! See the [playerctl](https://github.com/altdesktop/playerctl) project for more information.
-
-// These aren't completely necessary,
-// but everything they've suggested so far has been useful.
-// Could be removed if they get too annoying.
-#![warn(
-    missing_docs,
-    clippy::missing_docs_in_private_items,
-    clippy::cargo,
-    clippy::unwrap_used,
-    clippy::pedantic,
-    clippy::nursery,
-    future_incompatible
-)]
-
-use std::{
-    fmt::{self, Display},
-    process::Command,
-    str::FromStr,
-};
+use std::{process::Command, str::FromStr};
 
 /// Runs a command and returns the output.
 ///
