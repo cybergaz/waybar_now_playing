@@ -1,7 +1,7 @@
 use serde_json::json;
 use std::io::{self, Write};
-use waybar_player::PlayerCtl as player;
-use waybar_player::PlayerStatus as ps;
+use waybar_now_playing::PlayerCtl as player;
+use waybar_now_playing::PlayerStatus as ps;
 
 fn draw() -> io::Result<()> {
     let metadata = player::metadata();
@@ -40,8 +40,8 @@ fn vanish() -> io::Result<()> {
 
 fn main() {
     if player::status() == ps::NoPlayer {
-        vanish();
+        let _ = vanish();
     } else {
-        draw();
+        let _ = draw();
     }
 }

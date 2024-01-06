@@ -1,5 +1,5 @@
 [package]
-name = "waybar_player"
+name = "waybar_now_playing"
 version = "0.1.0"
 edition = "2021"
 

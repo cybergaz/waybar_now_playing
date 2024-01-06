@@ -1,9 +1,9 @@
 <div align="center">
 
-  waybar player
+  waybar now-playing
   =============
 
-  currently playing media representation on waybar written in rust which provide nearly zero performance and memory cost for updating even at the interval of 1 second
+  current track/song/media visualization on waybar written in rust which provide near zero performance and memory cost for updating even at the interval of 1 second
 
 
 </div>
@@ -13,18 +13,21 @@ you need to have `playerctl` installed
 ```
 sudo pacman -S playerctl
 ```
-  
+
+### get the binary here 
+* [download binary](www.github.com)
+
 ### manual build
 
 ```
-git clone https://github.com/cybergaz/waybar_player_rust
-cd waybar_player_rust
+git clone https://github.com/cybergaz/waybar_now_playing
+cd waybar_now_playing
 cargo build
 ```
 
 <br>
 
-### integration with waybar 
+### integration in waybar 
 just update the waybar config by adding new module , for example :
 ```
   "custom/player": {
