@@ -15,7 +15,7 @@ sudo pacman -S playerctl
 ```
 
 ### get the binary here 
-* [download binary](www.github.com)
+* [download binary](https://github.com/cybergaz/waybar_now_playing/releases/download/v1.0/waybar_now_playing)
 
 ### manual build
 
