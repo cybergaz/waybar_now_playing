@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 serde_json = "1.0.105"
+
+[stable-x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = ["-C", "link-arg=-fuse-ld=/usr/bin/mold"]

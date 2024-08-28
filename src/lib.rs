@@ -8,7 +8,6 @@ use std::{process::Command, str::FromStr};
 /// Panics if the command fails to execute.
 fn command(command: &str) -> String {
     let mut parts = command.split_whitespace().collect::<Vec<&str>>();
-
     let stdout = Command::new(parts.remove(0))
         .args(parts)
         .output()
@@ -122,8 +121,12 @@ impl PlayerCtl {
     }
 
     /// Play / pause media.
-    pub fn play_pause() {
-        command("playerctl play-pause");
+    pub fn play_pause(active_player: &Option<String>) {
+        if let Some(active_player) = active_player {
+            command(&format!("playerctl -p {} play-pause", active_player));
+        } else {
+            command("playerctl play-pause");
+        }
     }
 
     /// Stop media.
@@ -132,13 +135,21 @@ impl PlayerCtl {
     }
 
     /// Skip to the next track.
-    pub fn next() {
-        command("playerctl next");
+    pub fn next(active_player: &Option<String>) {
+        if let Some(active_player) = active_player {
+            command(&format!("playerctl -p {} next", active_player));
+        } else {
+            command("playerctl next");
+        }
     }
 
     /// Skip to the previous track.
-    pub fn previous() {
-        command("playerctl previous");
+    pub fn previous(active_player: &Option<String>) {
+        if let Some(active_player) = active_player {
+            command(&format!("playerctl -p {} previous", active_player));
+        } else {
+            command("playerctl next");
+        }
     }
 
     /// Seek forwards / backwards in seconds.
@@ -179,10 +190,21 @@ impl PlayerCtl {
 
     /// Get the metadata of the currently playing track.
     #[must_use]
-    pub fn metadata() -> TrackMetadata {
-        let title = command("playerctl metadata title").trim().to_string();
-        let artist = command("playerctl metadata artist").trim().to_string();
-        let album = command("playerctl metadata album").trim().to_string();
+    pub fn metadata(active_player: &Option<String>) -> TrackMetadata {
+        let mut title = command("playerctl metadata title").trim().to_string();
+        let mut artist = command("playerctl metadata artist").trim().to_string();
+        let mut album = command("playerctl metadata album").trim().to_string();
+        if let Some(active_player) = active_player {
+            title = command(&format!("playerctl -p {} metadata title", active_player))
+                .trim()
+                .to_string();
+            artist = command(&format!("playerctl -p {} metadata artist", active_player))
+                .trim()
+                .to_string();
+            album = command(&format!("playerctl -p {} metadata album", active_player))
+                .trim()
+                .to_string();
+        }
 
         TrackMetadata {
             artist,
@@ -232,5 +254,29 @@ impl PlayerCtl {
     /// Set the shuffle status.
     pub fn shuffle_set(status: ShuffleStatus) {
         command(&format!("playerctl shuffle {:?}", status));
+    }
+
+    /// list all the available players
+    pub fn list_all() -> Vec<String> {
+        command("playerctl -l")
+            .trim()
+            .split('\n')
+            .map(String::from)
+            .collect()
+    }
+
+    /// status for given player
+    pub fn status_of(player: &str) -> PlayerStatus {
+        let status_str = &command(&format!("playerctl -p {} status", player))
+            .trim()
+            .to_owned()[..];
+
+        match status_str {
+            "Playing" | "Paused" | "Stopped" => {
+                status_str.parse().unwrap_or(PlayerStatus::NoPlayer)
+            }
+            "No players found" => PlayerStatus::NoPlayer,
+            _ => PlayerStatus::NoPlayer, // Handle any other unexpected cases
+        }
     }
 }
